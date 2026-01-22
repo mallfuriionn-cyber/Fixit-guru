@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FixIt Guru v2.52 | Studio Synthesis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fbfbfd;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .apple-shadow { box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06); }
+
+        /* Icon Animations v2.52 */
+        @keyframes wrench-turn {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(30deg); }
+        }
+        .animate-wrench { animation: wrench-turn 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+        @keyframes leaf-sway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(15deg) scale(1.1); }
+        }
+        .animate-leaf { animation: leaf-sway 4s ease-in-out infinite; }
+
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+        .status-pulse { animation: status-pulse 2s infinite; }
+
+        /* Eko-ticker animation */
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 40s linear infinite;
+        }
+
+        .hud-transparency { opacity: 0.98; }
+        
+        /* Specialized Glows */
+        .glow-blue { box-shadow: 0 0 60px rgba(37, 99, 235, 0.1); }
+        .glow-amber { box-shadow: 0 0 60px rgba(217, 119, 6, 0.1); }
+        .glow-emerald { box-shadow: 0 0 60px rgba(5, 150, 105, 0.1); }
+        .glow-orange { box-shadow: 0 0 60px rgba(234, 88, 12, 0.1); }
+
+        /* Terminal Scanline */
+        .scanline::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.02) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
+            z-index: 999;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Smooth scrolling for portal */
+        html { scroll-behavior: smooth; }
+
+        /* Specialized transitions */
+        .specialist-card {
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "lucide-react": "https://esm.sh/lucie-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="scanline">
+    <div id="root"></div>
+</body>
+</html>

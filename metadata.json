@@ -1,0 +1,8 @@
+{
+  "name": "FixIt Guru v2.1 - Studio Synthesis",
+  "description": "Multi-agent expert system for hardware diagnostics, plant care, and heavy-duty repairs featuring Karel, Lucie, Dáša, and František.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
