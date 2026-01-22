@@ -3,59 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixit-guru Terminal | Demo</title>
+    <title>Fixit-guru | Terminal Interface</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #00ffa3; --bg: #050505; }
-        body { font-family: 'Fira Code', monospace; background: var(--bg); color: #fff; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
-        .back-nav { position: absolute; top: 20px; left: 20px; }
-        .back-nav a { color: var(--p); text-decoration: none; font-size: 0.9rem; }
-        .terminal { background: #111; width: 90%; max-width: 700px; border-radius: 8px; border: 1px solid #333; overflow: hidden; box-shadow: 0 0 40px rgba(0,255,163,0.1); }
-        .header { background: #222; padding: 12px 20px; font-family: 'Orbitron'; font-size: 0.7rem; color: var(--p); display: flex; justify-content: space-between; }
-        .content { padding: 25px; height: 350px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; color: #0f0; }
-        .controls { padding: 20px; background: #181818; border-top: 1px solid #333; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        button { background: transparent; border: 1px solid var(--p); color: var(--p); padding: 10px; cursor: pointer; font-family: inherit; font-size: 0.8rem; transition: 0.2s; }
-        button:hover { background: var(--p); color: #000; }
-        input { background: #000; border: 1px solid #444; color: #fff; padding: 12px; grid-column: span 2; font-family: inherit; outline: none; }
-        .blue { color: #00d4ff; } .ready { color: var(--p); font-weight: bold; }
+        body { background: #000; color: #00ffa3; font-family: 'Fira Code', monospace; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .terminal-box { width: 90%; max-width: 800px; height: 500px; border: 1px solid #00ffa3; background: rgba(0, 20, 10, 0.9); box-shadow: 0 0 30px rgba(0,255,163,0.2); display: flex; flex-direction: column; }
+        .top-bar { padding: 10px 20px; border-bottom: 1px solid #00ffa3; font-family: 'Orbitron'; font-size: 0.7rem; display: flex; justify-content: space-between; background: #00ffa3; color: #000; }
+        #output { flex: 1; padding: 20px; overflow-y: auto; font-size: 0.9rem; line-height: 1.6; }
+        .input-area { padding: 15px; border-top: 1px solid #00ffa3; display: flex; }
+        input { background: transparent; border: none; color: #00ffa3; outline: none; flex: 1; font-family: inherit; font-size: 1rem; }
+        .cursor { width: 10px; height: 20px; background: #00ffa3; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .red { color: #ff4444; } .white { color: #fff; }
     </style>
 </head>
 <body>
-    <div class="back-nav"><a href="index.html">← Zpět na hlavní web</a></div>
-    
-    <div class="terminal">
-        <div class="header"><span>FIXIT-GURU TERMINAL v1.2</span><span>SYNTHESIS_OS</span></div>
-        <div id="log" class="content">
-            <span class="blue">[SYS]</span> Fixit-guru Core inicializováno...<br>
-            <span class="blue">[SYS]</span> Připojení k Deno Runtime aktivní.<br>
-            <span class="ready">[READY]</span> Terminál připraven k použití.<br>
+    <div class="terminal-box">
+        <div class="top-bar"><span>FIXIT-GURU TERMINAL v2.0</span><span>STAV: AKTIVNÍ</span></div>
+        <div id="output">
+            <span class="white">Přihlášen jako:</span> Mallfuriionn (Synthesis Lead)<br>
+            <span class="white">Systém:</span> Deno 1.x / TypeScript 98%<br>
+            -----------------------------------------<br>
+            Zadejte 'help' pro seznam příkazů...<br>
         </div>
-        <div class="controls">
-            <input type="text" id="nameIn" placeholder="Zadejte jméno subjektu...">
-            <button onclick="runCmd('REG')">Registrace Identity</button>
-            <button onclick="runCmd('EXPERT')">Aktivovat Expert Tier</button>
-            <button onclick="runCmd('CLEAR')">Vyčistit log</button>
-            <button onclick="window.open('https://github.com/mallfuriionn-cyber/Fixit-guru/releases')">Source ZIP</button>
+        <div class="input-area">
+            <span style="margin-right: 10px;">></span>
+            <input type="text" id="commandInput" autofocus onkeydown="if(event.key==='Enter') runCommand()">
+            <div class="cursor"></div>
         </div>
     </div>
 
     <script>
-        const log = document.getElementById('log');
-        function addLine(txt, type='SYS') {
-            const time = new Date().toLocaleTimeString();
-            log.innerHTML += `<br>[${time}] <span class="${type==='READY'?'ready':'blue'}">[${type}]</span> ${txt}`;
-            log.scrollTop = log.scrollHeight;
+        const out = document.getElementById('output');
+        const inp = document.getElementById('commandInput');
+
+        function print(text, delay = 0) {
+            setTimeout(() => {
+                out.innerHTML += `<div>${text}</div>`;
+                out.scrollTop = out.scrollHeight;
+            }, delay);
         }
-        function runCmd(cmd) {
-            if(cmd === 'REG') {
-                const n = document.getElementById('nameIn').value || 'User';
-                addLine(`Zahajuji registraci pro: ${n}...`);
-                setTimeout(()=>addLine(`ID vygenerováno: SG-${Math.floor(Math.random()*99999)}`, 'READY'), 1000);
-            } else if(cmd === 'EXPERT') {
-                addLine('Přepínám na Expert Tier...');
-                setTimeout(()=>addLine('Oprávnění upravena na úroveň ROOT.', 'READY'), 800);
-            } else if(cmd === 'CLEAR') {
-                log.innerHTML = '<span class="ready">[READY]</span> Log vyčištěn.';
+
+        function runCommand() {
+            const cmd = inp.value.toLowerCase().trim();
+            print(`<span class="white">> ${cmd}</span>`);
+            inp.value = '';
+
+            switch(cmd) {
+                case 'help':
+                    print('Dostupné příkazy: status, identity, expert, clear, exit');
+                    break;
+                case 'status':
+                    print('Všechny systémy Synthesis jsou nominální.');
+                    print('CI/CD Pipeline: <span style="color:white">CONNECTED</span>');
+                    break;
+                case 'identity':
+                    print('Spouštím Identity Portal...');
+                    print('...šifruji přístupové body...');
+                    print('...SUBJEKT: <span style="color:white">MALLFURIIONN</span>');
+                    print('...ROLE: <span style="color:white">FOUNDER</span>');
+                    break;
+                case 'expert':
+                    print('PŘEPÍNÁM DO REŽIMU EXPERT...', 0);
+                    print('<span class="red">Varování: Přístup k jádru Deno povolen.</span>', 500);
+                    break;
+                case 'clear':
+                    out.innerHTML = 'Log vyčištěn...';
+                    break;
+                case 'exit':
+                    window.location.href = 'index.html';
+                    break;
+                default:
+                    print(`Příkaz '${cmd}' nebyl rozpoznán.`);
             }
         }
     </script>
