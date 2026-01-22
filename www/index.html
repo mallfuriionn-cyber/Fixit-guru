@@ -3,58 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixit-guru Demo | Studio Synthesis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <title>Fixit-guru | Studio Synthesis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #00ffa3; --bg: #050505; --c: #111; }
-        body { font-family: 'Fira Code', monospace; background: var(--bg); color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .terminal { background: var(--c); width: 90%; max-width: 600px; border-radius: 12px; border: 1px solid #333; overflow: hidden; box-shadow: 0 20px 50px rgba(0,255,163,0.15); }
-        .header { background: #222; padding: 10px 20px; font-family: 'Orbitron'; font-size: 0.8rem; color: var(--p); display: flex; justify-content: space-between; }
-        .content { padding: 20px; height: 300px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5; color: #0f0; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
-        .controls { padding: 20px; background: #181818; border-top: 1px solid #333; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        button { background: transparent; border: 1px solid var(--p); color: var(--p); padding: 10px; cursor: pointer; font-family: inherit; transition: 0.3s; }
-        button:hover { background: var(--p); color: #000; }
-        input { background: #000; border: 1px solid #444; color: #fff; padding: 10px; grid-column: span 2; font-family: inherit; }
-        .green { color: var(--p); }
-        .blue { color: #00d4ff; }
+        :root { --p: #00ffa3; --bg: #030a08; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        .bg-glow { position: fixed; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,255,163,0.1) 0%, transparent 70%); top: -10%; right: -10%; z-index: -1; }
+        
+        nav { padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,255,163,0.1); }
+        .logo { font-family: 'Orbitron'; color: var(--p); font-weight: 700; letter-spacing: 2px; }
+        nav a { color: #fff; text-decoration: none; margin-left: 30px; font-weight: 500; transition: 0.3s; }
+        nav a:hover { color: var(--p); }
+
+        .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
+        h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; background: linear-gradient(to bottom, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .tagline { font-size: clamp(1rem, 3vw, 1.2rem); color: var(--p); letter-spacing: 8px; margin-bottom: 40px; text-transform: uppercase; }
+
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px; border-radius: 24px; max-width: 700px; line-height: 1.6;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .btn { margin-top: 40px; background: var(--p); color: #000; padding: 18px 45px; border-radius: 4px; text-decoration: none; font-weight: bold; font-family: 'Orbitron'; transition: 0.3s; display: inline-block; letter-spacing: 1px; }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,255,163,0.4); }
     </style>
 </head>
 <body>
-    <div class="terminal">
-        <div class="header"><span>FIXIT-GURU v1.0.demo</span><span>STUDIO SYNTHESIS</span></div>
-        <div class="content" id="log">
-            <span class="blue">[SYSTEM]</span> Inicializace Fixit-guru Core...<br>
-            <span class="blue">[SYSTEM]</span> Deno Runtime připraven.<br>
-            <span class="green">[READY]</span> Čekám na vstup uživatele...<br>
+    <div class="bg-glow"></div>
+    <nav>
+        <div class="logo">STUDIO SYNTHESIS</div>
+        <div class="links">
+            <a href="demo.html">Demo</a>
+            <a href="https://github.com/mallfuriionn-cyber/Fixit-guru">Source</a>
         </div>
-        <div class="controls">
-            <input type="text" id="userName" placeholder="Zadejte jméno pro Identity Portal...">
-            <button onclick="register()">Registrovat ID</button>
-            <button onclick="switchMode('EXPERT')">Režim Expert</button>
-            <button onclick="switchMode('FAMILY')">Režim Rodina</button>
-            <button onclick="location.href='https://github.com/mallfuriionn-cyber/Fixit-guru/releases'">Stáhnout ZIP</button>
+    </nav>
+
+    <div class="hero">
+        <h1>FIXIT-GURU</h1>
+        <div class="tagline">Core Identity System</div>
+        
+        <div class="glass-card">
+            <p>Vítejte v příští generaci správy identit. <strong>Fixit-guru</strong> je robustní jádro postavené na <strong>TypeScriptu</strong> a <strong>Deno</strong>, navržené pro maximální škálovatelnost v rámci ekosystému Studio Synthesis.</p>
+            <p>Zabezpečení, automatizace a modularita v jednom balíku.</p>
         </div>
+        
+        <a href="demo.html" class="btn">SPUSTIT KONZOLI</a>
     </div>
-
-    <script>
-        const log = document.getElementById('log');
-        function addLog(msg, type = 'INFO') {
-            const time = new Date().toLocaleTimeString();
-            log.innerHTML += `<br>[${time}] <span class="${type === 'ERR' ? 'red' : 'blue'}">[${type}]</span> ${msg}`;
-            log.scrollTop = log.scrollHeight;
-        }
-
-        function register() {
-            const name = document.getElementById('userName').value || 'Anonym';
-            addLog(`Spouštím Identity Portal pro: ${name}...`);
-            setTimeout(() => addLog(`Generuji šifrovaný klíč Synthesis...`, 'CORE'), 600);
-            setTimeout(() => addLog(`Uživatel ${name} úspěšně registrován s ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`, 'READY'), 1500);
-        }
-
-        function switchMode(mode) {
-            addLog(`Přepínám User Tier na: ${mode}...`);
-            setTimeout(() => addLog(`Konfigurace ${mode} aplikována na jádro.`, 'READY'), 800);
-        }
-    </script>
 </body>
 </html>
