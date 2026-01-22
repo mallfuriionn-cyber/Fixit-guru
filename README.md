@@ -1,20 +1,40 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+🔧 FixIt Guru v2.1 – Studio Synth Terminal
+FixIt Guru je pokročilé AI rozhraní pro demokratizaci technických znalostí, boj FixIt plánovanému zastarávání věcí a podporu práva na opravu v digitálním věku.
+🚀 Rychlý start (Run Locally)
+Pro lokální nasazení aplikace postupujte podle těchto kroků:
+ * Prerekvizity: Vyžaduje Node.js.
+ * Instalace závislostí:
+   npm install
 
-# Run and deploy your AI Studio app
+ * Konfigurace: Nastavte svůj GEMINI_API_KEY v souboru .env.local.
+ * Spuštění:
+   npm run dev
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1d6yoKmiRUPx2xJaF867bsy1tLHJbVWt3
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+📂 Přehled klíčových modulů
+1. Registrace Identity (Identity Portal)
+Zabezpečené rozhraní pro správu uživatelských profilů se zaoblenou estetikou a logikou Synthesis.
+ * User Tiers: Přepínání mezi režimy Expert a Rodina (případně Začátečník/Zkušený/Profík).
+ * E-mailový terminál: Centrální komunikační uzel (např. operator@synthesis.studio).
+ * Secure Gate: Podpora biometrického ověření (Otisk) a integrace Google Auth.
+2. Zlepšení (Backlog Synthesis)
+Interaktivní platforma pro komunitní vývoj a návrhy nových funkcí.
+ * Audio Diagnostika v3.0: Automatické rozpoznání frekvence zadřených ložisek a opotřebení uhlíků.
+ * 3D STL Katalog: Databáze náhradních krytek a knoflíků pro přímý 3D tisk u vás doma.
+ * Kniha přání: Modul pro zápis požadavků na nové specialisty v týmu Synthesis.
+3. Právo & Ochrana (Compliance Core v2.89)
+Právní průvodce Synthesis chránící vaše právo na údržbu a opravu.
+ * Cítím se podveden: Okamžité spuštění reklamačního asistenta při detekci nefunkčního zařízení.
+ * Právo na opravu (EU): Zákony nutící výrobce konstruovat věci tak, aby byly rozebíratelné běžným nářadím.
+ * Dostupnost dílů (10 let): Povinnost výrobců držet náhradní díly a doručit je do 15 pracovních dnů.
+ * Boj s kazítky: Ochrana proti záměrnému snižování životnosti softwaru nebo hardwaru.
+ * Nárok na dokumentaci: Vyhledávání servisních manuálů a kódů, které dříve výrobci tajili (Asistentka Lucie).
+🛠️ Technická architektura
+Systém využívá modulární strukturu pro ukládání dat (JSON formáty) a dedikované AI agenty:
+ * Karel: Specialista na hardware, PCB a měření.
+ * Lucie: Expertka na dokumentaci, manuály a metodické vedení.
+ * Dáša: Specialistka na ekologii a organickou údržbu.
+ * František: Mistr síly, mechaniky a bezpečnosti práce.
+⚖️ Bezpečnostní upozornění
+> BEZPEČNOSTNÍ PROTOKOL: Práce na elektrických zařízeních (230V) vyžaduje odbornou způsobilost. Používáním systému potvrzujete znalost bezpečnostních standardů. Studio Synthesis neručí za škody na majetku či zdraví vzniklé neodbornou manipulací.
+> 
+Vytvořeno pro komunitu Studio Synthesis | 2026
