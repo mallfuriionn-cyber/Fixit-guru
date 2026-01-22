@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FixIt Guru v2.1 | Glassmorphism Edition</title>
+    <title>FixIt Guru v2.1 | Studio Synth Terminal</title>
     <style>
         :root {
-            --bg-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=2070');
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            --bg-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2070');
+            --glass: rgba(255, 255, 255, 0.07);
             --glass-border: rgba(255, 255, 255, 0.15);
-            --accent-blue: #00d2ff; /* Karel */
-            --accent-gold: #ffca28; /* Lucie */
-            --accent-green: #4caf50; /* Dáša */
-            --accent-orange: #ff7043; /* František */
-            --radius: 24px;
+            --accent-blue: #00d2ff;
+            --accent-green: #4caf50;
+            --accent-red: #ff4444;
+            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(rgba(13, 17, 23, 0.8), rgba(13, 17, 23, 0.9)), var(--bg-image);
+            font-family: var(--font-main);
+            background: linear-gradient(rgba(10, 14, 20, 0.85), rgba(10, 14, 20, 0.95)), var(--bg-image);
             background-size: cover;
             background-attachment: fixed;
             color: #ffffff;
             margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            line-height: 1.6;
         }
 
-        /* Navigace Glass */
+        /* Skleněná Navigace */
         nav {
-            width: 85%;
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: var(--glass-bg);
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1100px;
+            background: var(--glass);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid var(--glass-border);
@@ -42,157 +41,133 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 20px;
+            padding: 12px 30px;
             z-index: 1000;
         }
 
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
+        .nav-logo { font-weight: 800; letter-spacing: 1px; color: var(--accent-blue); }
+        .nav-links a { color: #ccc; text-decoration: none; margin-left: 20px; font-size: 0.9rem; transition: 0.3s; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 10px #fff; }
 
+        /* Hlavní kontejner */
+        .container {
+            max-width: 1000px;
+            margin: 140px auto 60px;
+            padding: 0 20px;
+        }
+
         /* Hero Sekce */
-        .hero {
-            text-align: center;
-            padding: 100px 20px 40px;
-        }
+        .hero { text-align: center; margin-bottom: 80px; }
+        .hero h1 { font-size: 4rem; margin: 0; background: linear-gradient(to bottom, #fff, #888); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; opacity: 0.8; }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            letter-spacing: -1px;
-            background: linear-gradient(to right, #fff, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Grid Asistentů s Aura efektem */
-        .specialist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            width: 90%;
-            max-width: 1200px;
-            margin: 40px 0;
-        }
-
+        /* Skleněné Karty */
         .glass-card {
-            background: var(--glass-bg);
+            background: var(--glass);
             backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            padding: 40px 20px;
-            text-align: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .glass-card:hover {
-            transform: scale(1.05) translateY(-10px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Barevné aury podle asistentů */
-        .karel:hover { box-shadow: 0 0 40px rgba(0, 210, 255, 0.3); }
-        .lucie:hover { box-shadow: 0 0 40px rgba(255, 202, 40, 0.3); }
-        .dasa:hover { box-shadow: 0 0 40px rgba(76, 175, 80, 0.3); }
-        .frantisek:hover { box-shadow: 0 0 40px rgba(255, 112, 67, 0.3); }
-
-        /* Compliance sekce */
-        .compliance-box {
-            width: 90%;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: var(--radius);
-            padding: 30px;
-            margin: 50px 0;
-            border: 1px solid var(--glass-border);
-        }
-
-        .action-item {
-            display: flex;
-            align-items: center;
-            padding: 20px;
-            margin: 10px 0;
-            background: var(--glass-bg);
-            border-radius: 15px;
-            text-decoration: none;
-            color: white;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
             transition: 0.3s;
         }
+        .glass-card:hover { border-color: rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.1); }
 
-        .action-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .accent-line { width: 50px; height: 4px; background: var(--accent-blue); margin-bottom: 20px; border-radius: 2px; }
 
-        .alert-bg { border-left: 5px solid #ff4444; }
+        /* Mřížka asistentů */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 40px 0; }
+        .mini-card { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--glass-border); text-align: center; }
+        .mini-card h3 { margin: 10px 0; font-size: 1rem; }
 
-        footer { padding: 50px; opacity: 0.6; font-size: 0.8rem; text-align: center; }
+        /* Profil Mallfurion */
+        .profile-header { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .avatar-placeholder { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(45deg, var(--accent-blue), #9c27b0); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.5rem; }
+
+        /* Sekce Cítím se podveden */
+        .alert-card { border-left: 6px solid var(--accent-red); background: rgba(255, 68, 68, 0.05); }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px; opacity: 0.5; font-size: 0.8rem; }
+
+        /* Responzivita */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            nav { padding: 10px 20px; }
+            .nav-links { display: none; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <div style="font-weight: 800; font-size: 1.2rem;">🔧 STUDIO SYNTH</div>
+        <div class="nav-logo">🔧 STUDIO SYNTHESIS</div>
         <div class="nav-links">
-            <a href="#">TERMINAL</a>
-            <a href="#">BACKLOG</a>
+            <a href="#vize">VIZE</a>
+            <a href="#ai">AI GEMINI</a>
+            <a href="#mallfurion">MALLFURION</a>
             <a href="#">👤 IDENTITY</a>
         </div>
     </nav>
 
-    <header class="hero">
-        <h1>FixIt Guru v2.1</h1>
-        <p style="opacity: 0.7;">Inteligence, která opravuje svět. Vyberte si svého specialistu.</p>
-    </header>
+    <div class="container">
+        
+        <section class="hero">
+            <h1>FixIt Guru v2.1</h1>
+            <p>Budoucnost oprav začíná tady. Lidská zručnost, umělá inteligence.</p>
+        </section>
 
-    <div class="specialist-grid">
-        <div class="glass-card karel">
-            <h2 style="color: var(--accent-blue);">KAREL</h2>
-            <p>Hardware God</p>
-            <small>PCB & Diagnostika</small>
-        </div>
-        <div class="glass-card lucie">
-            <h2 style="color: var(--accent-gold);">LUCIE</h2>
-            <p>Step-Lock Mentor</p>
-            <small>Dokumentace & Metodika</small>
-        </div>
-        <div class="glass-card dasa">
-            <h2 style="color: var(--accent-green);">DÁŠA</h2>
-            <p>Organic Fanatic</p>
-            <small>Eko-vize & Zahrada</small>
-        </div>
-        <div class="glass-card frantisek">
-            <h2 style="color: var(--accent-orange);">FRANTIŠEK</h2>
-            <p>Master of Force</p>
-            <small>Konstrukce & Bezpečnost</small>
-        </div>
-    </div>
+        <section class="glass-card" id="vize">
+            <div class="accent-line"></div>
+            <h2>Naše vize: Svět bez zbytečného odpadu</h2>
+            <p>Věříme, že každé zařízení si zaslouží druhou šanci. Studio Synthesis vzniklo jako odpověď na kulturu plánovaného zastarávání. Opravováním věcí šetříme planetu, učíme se samostatnosti a bojujeme proti zbytečnému konzumu.</p>
+            <div class="grid">
+                <div class="mini-card">
+                    <span style="color: var(--accent-green);">🌱</span>
+                    <h3>Eko-Vize</h3>
+                    <p>Měříme každé zachráněné kilo odpadu.</p>
+                </div>
+                <div class="mini-card">
+                    <span style="color: var(--accent-blue);">⚖️</span>
+                    <h3>Právo na opravu</h3>
+                    <p>Využíváme legislativu EU ve váš prospěch.</p>
+                </div>
+                <div class="mini-card">
+                    <span style="color: var(--accent-red);">🛠️</span>
+                    <h3>Boj s kazítky</h3>
+                    <p>Odhalujeme techniky omezování životnosti.</p>
+                </div>
+            </div>
+        </section>
 
-    <div class="compliance-box">
-        <h3 style="margin-top: 0;">PRÁVO & OCHRANA v2.89</h3>
-        <a href="#" class="action-item alert-bg">
-            <span style="font-size: 1.5rem; margin-right: 20px;">🛡️</span>
-            <div>
-                <strong>CÍTÍM SE PODVEDEN</strong>
-                <p style="margin: 5px 0 0; opacity: 0.7; font-size: 0.9rem;">Spustit reklamačního asistenta.</p>
+        <section class="glass-card" id="ai" style="border-top: 1px solid rgba(156, 39, 176, 0.3);">
+            <div class="accent-line" style="background: #9c27b0;"></div>
+            <h2>Síla AI Gemini</h2>
+            <p>Ke zlepšení našich služeb využíváme to nejlepší na trhu – model <strong>Gemini</strong>. Nestydíme se za to, že AI je naším parťákem v dílně. Díky ní dokážeme analyzovat složitá schémata, vyhledávat skryté servisní kódy a nabízet řešení v reálném čase, která by dříve trvala hodiny hledání.</p>
+        </section>
+
+        <section class="glass-card" id="mallfurion">
+            <div class="profile-header">
+                <div class="avatar-placeholder">M</div>
+                <div>
+                    <h2 style="margin: 0;">Mallfurion</h2>
+                    <p style="margin: 0; opacity: 0.6;">Zakladatel & Cyber-Entuziast</p>
+                </div>
             </div>
-        </a>
-        <a href="#" class="action-item">
-            <span style="font-size: 1.5rem; margin-right: 20px;">⚖️</span>
-            <div>
-                <strong>PRÁVO NA OPRAVU (EU)</strong>
-                <p style="margin: 5px 0 0; opacity: 0.7; font-size: 0.9rem;">Legislativní standardy Synthesis.</p>
-            </div>
-        </a>
+            <p>Baví mě propojovat kybernetiku s reálným světem. Moje vize je jednoduchá: vytvořit platformu, kde i ten nejsložitější problém najde své řešení. Skrze projekt FixIt Guru se snažím ukázat, že s pomocí správné technologie, jako je Gemini, můžeme změnit svět k lepšímu – jeden opravený kousek po druhém.</p>
+        </section>
+
+        <section class="glass-card alert-card">
+            <h2>Cítím se podveden?</h2>
+            <p>Nefunguje věc těsně po záruce? Odmítli vám opravu? Náš reklamační asistent vám pomůže připravit právní podklady na základě norem EU/CZ. Nenechte se odbýt.</p>
+            <button style="background: var(--accent-red); border: none; color: white; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-weight: bold;">SPUSTIT ASISTENTA</button>
+        </section>
+
     </div>
 
     <footer>
-        <p>EKO-VIZE: Zachráněno 42.5 kg elektroodpadu.</p>
-        <p>BUILD: 2026-01-22 | SYNTHESIS TERMINAL v2.58</p>
+        <p>EKO-VIZE: Společně jsme ušetřili už 42.5 kg odpadu.</p>
+        <p>STUDIO SYNTHESIS | 2026 | Powered by Gemini AI</p>
     </footer>
 
 </body>
