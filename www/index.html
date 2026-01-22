@@ -3,53 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixit-guru | Studio Synthesis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;600&display=swap" rel="stylesheet">
+    <title>Fixit-guru | Studio Synthesis 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #00ffa3; --bg: #030a08; }
+        :root { --p: #00ffa3; --bg: #020202; --glass: rgba(255, 255, 255, 0.03); }
         body { margin: 0; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        .bg-glow { position: fixed; width: 50vw; height: 50vw; background: radial-gradient(circle, rgba(0,255,163,0.1) 0%, transparent 70%); top: -10%; right: -10%; z-index: -1; }
         
-        nav { padding: 25px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(0,255,163,0.1); }
-        .logo { font-family: 'Orbitron'; color: var(--p); font-weight: 700; letter-spacing: 2px; }
-        nav a { color: #fff; text-decoration: none; margin-left: 30px; font-weight: 500; transition: 0.3s; }
-        nav a:hover { color: var(--p); }
+        /* Animované pozadí */
+        .scanline { width: 100%; height: 100px; background: linear-gradient(0deg, transparent 0%, rgba(0, 255, 163, 0.05) 50%, transparent 100%); position: fixed; top: -100px; animation: scan 8s linear infinite; pointer-events: none; z-index: 10; }
+        @keyframes scan { 0% { top: -100px; } 100% { top: 100vh; } }
 
-        .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; }
-        h1 { font-family: 'Orbitron'; font-size: clamp(2.5rem, 8vw, 5rem); margin: 0; background: linear-gradient(to bottom, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .tagline { font-size: clamp(1rem, 3vw, 1.2rem); color: var(--p); letter-spacing: 8px; margin-bottom: 40px; text-transform: uppercase; }
+        nav { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-family: 'Orbitron'; color: var(--p); letter-spacing: 3px; font-weight: 700; }
 
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 40px; border-radius: 24px; max-width: 700px; line-height: 1.6;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .btn { margin-top: 40px; background: var(--p); color: #000; padding: 18px 45px; border-radius: 4px; text-decoration: none; font-weight: bold; font-family: 'Orbitron'; transition: 0.3s; display: inline-block; letter-spacing: 1px; }
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,255,163,0.4); }
+        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 10%; text-align: center; }
+        h1 { font-family: 'Orbitron'; font-size: clamp(3rem, 10vw, 6rem); margin: 0; letter-spacing: -2px; }
+        .role-badge { background: var(--p); color: #000; padding: 5px 15px; font-family: 'Orbitron'; font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; border-radius: 3px; }
+
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1000px; margin-top: 50px; }
+        .card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: left; transition: 0.4s; }
+        .card:hover { border-color: var(--p); transform: translateY(-5px); }
+        .card h3 { color: var(--p); font-family: 'Orbitron'; margin-top: 0; }
+
+        .cta-btn { margin-top: 60px; padding: 20px 50px; background: transparent; border: 2px solid var(--p); color: var(--p); font-family: 'Orbitron'; text-decoration: none; font-weight: bold; transition: 0.3s; cursor: pointer; }
+        .cta-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 50px rgba(0,255,163,0.4); }
     </style>
 </head>
 <body>
-    <div class="bg-glow"></div>
+    <div class="scanline"></div>
     <nav>
         <div class="logo">STUDIO SYNTHESIS</div>
-        <div class="links">
-            <a href="demo.html">Demo</a>
-            <a href="https://github.com/mallfuriionn-cyber/Fixit-guru">Source</a>
+        <div class="nav-links">
+            <a href="demo.html" style="color: var(--p); text-decoration: none;">SPUSTIT DEMO</a>
         </div>
     </nav>
 
     <div class="hero">
+        <div class="role-badge">LEAD DEVELOPER PORTAL</div>
         <h1>FIXIT-GURU</h1>
-        <div class="tagline">Core Identity System</div>
-        
-        <div class="glass-card">
-            <p>Vítejte v příští generaci správy identit. <strong>Fixit-guru</strong> je robustní jádro postavené na <strong>TypeScriptu</strong> a <strong>Deno</strong>, navržené pro maximální škálovatelnost v rámci ekosystému Studio Synthesis.</p>
-            <p>Zabezpečení, automatizace a modularita v jednom balíku.</p>
+        <p style="font-size: 1.4rem; color: #888; letter-spacing: 5px;">AUTOMATIZACE . IDENTITA . BUDOUCNOST</p>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3>Identity Portal</h3>
+                <p>Náš unikátní systém pro správu digitálních otisků uživatelů. Bezpečný, šifrovaný a plně integrovaný do Synthesis ekosystému.</p>
+            </div>
+            <div class="card">
+                <h3>Deno & TypeScript</h3>
+                <p>Projekt je z 98 % postaven na TypeScriptu. Využíváme moderní Deno runtime pro maximální rychlost a nativní bezpečnost.</p>
+            </div>
         </div>
-        
-        <a href="demo.html" class="btn">SPUSTIT KONZOLI</a>
+
+        <a href="demo.html" class="cta-btn">VSTOUPIT DO ROZHRANÍ</a>
     </div>
 </body>
 </html>
