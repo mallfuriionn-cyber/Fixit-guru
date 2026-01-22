@@ -1,28 +1,47 @@
-name: Auto Release Build
+name: Full Auto Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main  # Spustí se automaticky při každém pushi do hlavní větve
 
 permissions:
-  contents: write
+  contents: write  # Nutné pro automatické nahrávání balíčků
 
 jobs:
-  release:
+  build-and-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: denoland/setup-deno@v1
+      - name: Checkout kódu
+        uses: actions/checkout@v4
+
+      - name: Nastavení Deno
+        uses: denoland/setup-deno@v1
         with:
           deno-version: v1.x
-      - name: Vytvoření balíčku
-        run: zip -r release.zip . -x "*.git*" ".github*"
-      - uses: softprops/action-gh-release@v1
+
+      - name: Vytvoření balíčku (ZIP)
+        # Zabalí projekt a pojmenuje ho podle čísla buildu
+        run: zip -r fixit-guru-build-${{ github.run_number }}.zip . -x "*.git*" ".github*"
+
+      - name: Automatické vytvoření Release
+        uses: softprops/action-gh-release@v1
         with:
-          files: release.zip
-          name: Release ${{ github.ref_name }}
-          body: "Vytvořeno pro komunitu Studio Synthesis | 2026"
+          tag_name: b${{ github.run_number }}
+          name: Auto-Build v${{ github.run_number }}
+          body: |
+            ### 🤖 Automatický release systému Fixit-guru
+            Tato verze byla vygenerována automaticky při pushi do větve main.
+            
+            **Podrobnosti:**
+            - Číslo sestavení: ${{ github.run_number }}
+            - Commit: ${{ github.sha }}
+            - Čas vygenerování: ${{ github.event.head_commit.timestamp }}
+            
+            Vytvořeno pro komunitu Studio Synthesis | 2026
+          draft: false
+          prerelease: false
+          files: |
+            fixit-guru-build-${{ github.run_number }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
