@@ -1,10 +1,9 @@
-name: Full Auto CI/CD (Release & Pages)
+name: Full Auto CI/CD (Guru Core & Synthesis Web)
 
 on:
   push:
     branches: ["main"]
 
-# Nastavení oprávnění pro zápis verzí a publikování webu
 permissions:
   contents: write
   pages: write
@@ -23,15 +22,11 @@ jobs:
         with:
           deno-version: v1.x
 
-      # 1. KROK: Kontrola kódu (nepovinné, ale doporučené)
-      - name: Kontrola formátování
-        run: deno fmt --check || true # '|| true' zajistí, že proces neskončí chybou, pokud není naformátováno
-
-      # 2. KROK: Vytvoření balíčku pro Release
+      # 1. KROK: Vytvoření ZIP balíčku (kompletní Guru kód pro Releases)
       - name: Vytvoření ZIP balíčku
         run: zip -r fixit-guru-build-${{ github.run_number }}.zip . -x "*.git*" ".github*"
 
-      # 3. KROK: Automatický Release
+      # 2. KROK: Publikace Release na GitHubu
       - name: Publikovat Release
         uses: softprops/action-gh-release@v1
         with:
@@ -39,21 +34,22 @@ jobs:
           name: Auto-Build v${{ github.run_number }}
           body: |
             ### 🤖 Automatický release systému Fixit-guru
-            Tato verze byla vygenerována automaticky.
+            Tato verze obsahuje kompletní jádro projektu.
             - **Sestavení:** č. ${{ github.run_number }}
             - **Web:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
           files: fixit-guru-build-${{ github.run_number }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 4. KROK: Příprava a publikace GitHub Pages (Webu)
+      # 3. KROK: Nasazení webu ze složky 'www'
       - name: Nastavení Pages
         uses: actions/configure-pages@v4
 
       - name: Nahrání artefaktu pro web
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # Nahrává celý obsah projektu na web
+          # Robot teď bere obsah pouze ze složky 'www'
+          path: './www' 
 
       - name: Nasazení na GitHub Pages
         id: deployment
