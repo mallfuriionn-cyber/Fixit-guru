@@ -38,3 +38,31 @@ Systém využívá modulární strukturu pro ukládání dat (JSON formáty) a d
 > BEZPEČNOSTNÍ PROTOKOL: Práce na elektrických zařízeních (230V) vyžaduje odbornou způsobilost. Používáním systému potvrzujete znalost bezpečnostních standardů. Studio Synthesis neručí za škody na majetku či zdraví vzniklé neodbornou manipulací.
 > 
 Vytvořeno pro komunitu Studio Synthesis | 2026
+
+
+
+
+
+
+---
+
+## 🛠️ Automatizace a CI/CD (Novinky)
+
+Aktuálně jsme do projektu integrovali plnou automatizaci přes **GitHub Actions**, která zajišťuje:
+
+### 🚀 Živé statusy
+![Sestavení a Release](https://img.shields.io/github/actions/workflow/status/mallfuriionn-cyber/Fixit-guru/release.yml?branch=main&label=Build%20%26%20Release&style=for-the-badge)
+![GitHub Pages](https://img.shields.io/badge/Web-Live_on_Pages-blue?style=for-the-badge)
+
+### 📦 Automatické verze (Releases)
+Pokaždé, když nahrajeme kód do větve `main`, robot automaticky:
+1. **Sestaví projekt** v prostředí Deno.
+2. **Vytvoří unikátní balíček** (.zip) s aktuálním kódem.
+3. **Publikuje novou verzi** v sekci [Releases](./releases), kde si ji může kdokoli stáhnout.
+
+### 🌐 Webová prezentace
+Projekt je nyní nastaven pro automatické nasazení na **GitHub Pages**. Jakmile je repozitář veřejný, najdete živou ukázku na:
+👉 `https://mallfuriionn-cyber.github.io/Fixit-guru/`
+
+---
+*Vytvořeno pro komunitu Studio Synthesis | 2026*
