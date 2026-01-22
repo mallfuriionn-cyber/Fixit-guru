@@ -1,0 +1,28 @@
+name: Auto Release Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Vytvoření balíčku
+        run: zip -r release.zip . -x "*.git*" ".github*"
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: release.zip
+          name: Release ${{ github.ref_name }}
+          body: "Vytvořeno pro komunitu Studio Synthesis | 2026"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
