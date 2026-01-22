@@ -3,123 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixit-guru | Studio Synthesis</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500&display=swap" rel="stylesheet">
+    <title>Fixit-guru Demo | Studio Synthesis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #00ffa3;
-            --accent: #00d4ff;
-            --bg: #050505;
-            --card-bg: #111111;
-            --text: #ffffff;
-        }
-
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-        }
-
-        .container {
-            position: relative;
-            background: var(--card-bg);
-            padding: 3rem;
-            border-radius: 20px;
-            border: 1px solid #222;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 163, 0.1);
-            max-width: 450px;
-            z-index: 1;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            background: linear-gradient(45deg, var(--primary), var(--accent));
-            z-index: -1;
-            border-radius: 22px;
-            opacity: 0.3;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 0;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #888;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .status-box {
-            background: #000;
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 3px solid var(--primary);
-            margin-bottom: 2rem;
-            font-size: 0.9rem;
-            text-align: left;
-        }
-
-        .btn {
-            display: inline-block;
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-            padding: 12px 25px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .btn:hover {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 0 20px rgba(0, 255, 163, 0.4);
-        }
-
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: #444;
-        }
+        :root { --p: #00ffa3; --bg: #050505; --c: #111; }
+        body { font-family: 'Fira Code', monospace; background: var(--bg); color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .terminal { background: var(--c); width: 90%; max-width: 600px; border-radius: 12px; border: 1px solid #333; overflow: hidden; box-shadow: 0 20px 50px rgba(0,255,163,0.15); }
+        .header { background: #222; padding: 10px 20px; font-family: 'Orbitron'; font-size: 0.8rem; color: var(--p); display: flex; justify-content: space-between; }
+        .content { padding: 20px; height: 300px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5; color: #0f0; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
+        .controls { padding: 20px; background: #181818; border-top: 1px solid #333; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { background: transparent; border: 1px solid var(--p); color: var(--p); padding: 10px; cursor: pointer; font-family: inherit; transition: 0.3s; }
+        button:hover { background: var(--p); color: #000; }
+        input { background: #000; border: 1px solid #444; color: #fff; padding: 10px; grid-column: span 2; font-family: inherit; }
+        .green { color: var(--p); }
+        .blue { color: #00d4ff; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>FIXIT-GURU</h1>
-        <div class="subtitle">Studio Synthesis</div>
-        
-        <div class="status-box">
-            <code>> STATUS: ONLINE</code><br>
-            <code>> CORE: TYPESCRIPT 98%</code><br>
-            <code>> ENV: DENO RUNTIME</code>
+    <div class="terminal">
+        <div class="header"><span>FIXIT-GURU v1.0.demo</span><span>STUDIO SYNTHESIS</span></div>
+        <div class="content" id="log">
+            <span class="blue">[SYSTEM]</span> Inicializace Fixit-guru Core...<br>
+            <span class="blue">[SYSTEM]</span> Deno Runtime připraven.<br>
+            <span class="green">[READY]</span> Čekám na vstup uživatele...<br>
         </div>
-
-        <p>Automatizovaný uzel pro správu identit a modulární logiku Synthesis.</p>
-        
-        <a href="https://github.com/mallfuriionn-cyber/Fixit-guru/releases" class="btn">Stáhnout jádro (ZIP)</a>
-
-        <div class="footer">
-            &copy; 2026 | Vyvinuto pro komunitu Synthesis
+        <div class="controls">
+            <input type="text" id="userName" placeholder="Zadejte jméno pro Identity Portal...">
+            <button onclick="register()">Registrovat ID</button>
+            <button onclick="switchMode('EXPERT')">Režim Expert</button>
+            <button onclick="switchMode('FAMILY')">Režim Rodina</button>
+            <button onclick="location.href='https://github.com/mallfuriionn-cyber/Fixit-guru/releases'">Stáhnout ZIP</button>
         </div>
     </div>
+
+    <script>
+        const log = document.getElementById('log');
+        function addLog(msg, type = 'INFO') {
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `<br>[${time}] <span class="${type === 'ERR' ? 'red' : 'blue'}">[${type}]</span> ${msg}`;
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function register() {
+            const name = document.getElementById('userName').value || 'Anonym';
+            addLog(`Spouštím Identity Portal pro: ${name}...`);
+            setTimeout(() => addLog(`Generuji šifrovaný klíč Synthesis...`, 'CORE'), 600);
+            setTimeout(() => addLog(`Uživatel ${name} úspěšně registrován s ID: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`, 'READY'), 1500);
+        }
+
+        function switchMode(mode) {
+            addLog(`Přepínám User Tier na: ${mode}...`);
+            setTimeout(() => addLog(`Konfigurace ${mode} aplikována na jádro.`, 'READY'), 800);
+        }
+    </script>
 </body>
 </html>
