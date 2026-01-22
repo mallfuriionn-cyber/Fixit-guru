@@ -3,58 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixit-guru | Studio Synthesis 2026</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>FixIt Guru v2.1 | Glassmorphism Edition</title>
     <style>
-        :root { --p: #00ffa3; --bg: #020202; --glass: rgba(255, 255, 255, 0.03); }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
-        
-        /* Animované pozadí */
-        .scanline { width: 100%; height: 100px; background: linear-gradient(0deg, transparent 0%, rgba(0, 255, 163, 0.05) 50%, transparent 100%); position: fixed; top: -100px; animation: scan 8s linear infinite; pointer-events: none; z-index: 10; }
-        @keyframes scan { 0% { top: -100px; } 100% { top: 100vh; } }
+        :root {
+            --bg-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=2070');
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --accent-blue: #00d2ff; /* Karel */
+            --accent-gold: #ffca28; /* Lucie */
+            --accent-green: #4caf50; /* Dáša */
+            --accent-orange: #ff7043; /* František */
+            --radius: 24px;
+        }
 
-        nav { padding: 30px 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo { font-family: 'Orbitron'; color: var(--p); letter-spacing: 3px; font-weight: 700; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(rgba(13, 17, 23, 0.8), rgba(13, 17, 23, 0.9)), var(--bg-image);
+            background-size: cover;
+            background-attachment: fixed;
+            color: #ffffff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-        .hero { height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 0 10%; text-align: center; }
-        h1 { font-family: 'Orbitron'; font-size: clamp(3rem, 10vw, 6rem); margin: 0; letter-spacing: -2px; }
-        .role-badge { background: var(--p); color: #000; padding: 5px 15px; font-family: 'Orbitron'; font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; border-radius: 3px; }
+        /* Navigace Glass */
+        nav {
+            width: 85%;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 20px;
+            z-index: 1000;
+        }
 
-        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1000px; margin-top: 50px; }
-        .card { background: var(--glass); border: 1px solid rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; text-align: left; transition: 0.4s; }
-        .card:hover { border-color: var(--p); transform: translateY(-5px); }
-        .card h3 { color: var(--p); font-family: 'Orbitron'; margin-top: 0; }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
 
-        .cta-btn { margin-top: 60px; padding: 20px 50px; background: transparent; border: 2px solid var(--p); color: var(--p); font-family: 'Orbitron'; text-decoration: none; font-weight: bold; transition: 0.3s; cursor: pointer; }
-        .cta-btn:hover { background: var(--p); color: #000; box-shadow: 0 0 50px rgba(0,255,163,0.4); }
+        .nav-links a:hover { color: #fff; text-shadow: 0 0 10px #fff; }
+
+        /* Hero Sekce */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            letter-spacing: -1px;
+            background: linear-gradient(to right, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Grid Asistentů s Aura efektem */
+        .specialist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px 0;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius);
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Barevné aury podle asistentů */
+        .karel:hover { box-shadow: 0 0 40px rgba(0, 210, 255, 0.3); }
+        .lucie:hover { box-shadow: 0 0 40px rgba(255, 202, 40, 0.3); }
+        .dasa:hover { box-shadow: 0 0 40px rgba(76, 175, 80, 0.3); }
+        .frantisek:hover { box-shadow: 0 0 40px rgba(255, 112, 67, 0.3); }
+
+        /* Compliance sekce */
+        .compliance-box {
+            width: 90%;
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+            padding: 30px;
+            margin: 50px 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin: 10px 0;
+            background: var(--glass-bg);
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .action-item:hover { background: rgba(255, 255, 255, 0.1); }
+
+        .alert-bg { border-left: 5px solid #ff4444; }
+
+        footer { padding: 50px; opacity: 0.6; font-size: 0.8rem; text-align: center; }
     </style>
 </head>
 <body>
-    <div class="scanline"></div>
+
     <nav>
-        <div class="logo">STUDIO SYNTHESIS</div>
+        <div style="font-weight: 800; font-size: 1.2rem;">🔧 STUDIO SYNTH</div>
         <div class="nav-links">
-            <a href="demo.html" style="color: var(--p); text-decoration: none;">SPUSTIT DEMO</a>
+            <a href="#">TERMINAL</a>
+            <a href="#">BACKLOG</a>
+            <a href="#">👤 IDENTITY</a>
         </div>
     </nav>
 
-    <div class="hero">
-        <div class="role-badge">LEAD DEVELOPER PORTAL</div>
-        <h1>FIXIT-GURU</h1>
-        <p style="font-size: 1.4rem; color: #888; letter-spacing: 5px;">AUTOMATIZACE . IDENTITA . BUDOUCNOST</p>
+    <header class="hero">
+        <h1>FixIt Guru v2.1</h1>
+        <p style="opacity: 0.7;">Inteligence, která opravuje svět. Vyberte si svého specialistu.</p>
+    </header>
 
-        <div class="content-grid">
-            <div class="card">
-                <h3>Identity Portal</h3>
-                <p>Náš unikátní systém pro správu digitálních otisků uživatelů. Bezpečný, šifrovaný a plně integrovaný do Synthesis ekosystému.</p>
-            </div>
-            <div class="card">
-                <h3>Deno & TypeScript</h3>
-                <p>Projekt je z 98 % postaven na TypeScriptu. Využíváme moderní Deno runtime pro maximální rychlost a nativní bezpečnost.</p>
-            </div>
+    <div class="specialist-grid">
+        <div class="glass-card karel">
+            <h2 style="color: var(--accent-blue);">KAREL</h2>
+            <p>Hardware God</p>
+            <small>PCB & Diagnostika</small>
         </div>
-
-        <a href="demo.html" class="cta-btn">VSTOUPIT DO ROZHRANÍ</a>
+        <div class="glass-card lucie">
+            <h2 style="color: var(--accent-gold);">LUCIE</h2>
+            <p>Step-Lock Mentor</p>
+            <small>Dokumentace & Metodika</small>
+        </div>
+        <div class="glass-card dasa">
+            <h2 style="color: var(--accent-green);">DÁŠA</h2>
+            <p>Organic Fanatic</p>
+            <small>Eko-vize & Zahrada</small>
+        </div>
+        <div class="glass-card frantisek">
+            <h2 style="color: var(--accent-orange);">FRANTIŠEK</h2>
+            <p>Master of Force</p>
+            <small>Konstrukce & Bezpečnost</small>
+        </div>
     </div>
+
+    <div class="compliance-box">
+        <h3 style="margin-top: 0;">PRÁVO & OCHRANA v2.89</h3>
+        <a href="#" class="action-item alert-bg">
+            <span style="font-size: 1.5rem; margin-right: 20px;">🛡️</span>
+            <div>
+                <strong>CÍTÍM SE PODVEDEN</strong>
+                <p style="margin: 5px 0 0; opacity: 0.7; font-size: 0.9rem;">Spustit reklamačního asistenta.</p>
+            </div>
+        </a>
+        <a href="#" class="action-item">
+            <span style="font-size: 1.5rem; margin-right: 20px;">⚖️</span>
+            <div>
+                <strong>PRÁVO NA OPRAVU (EU)</strong>
+                <p style="margin: 5px 0 0; opacity: 0.7; font-size: 0.9rem;">Legislativní standardy Synthesis.</p>
+            </div>
+        </a>
+    </div>
+
+    <footer>
+        <p>EKO-VIZE: Zachráněno 42.5 kg elektroodpadu.</p>
+        <p>BUILD: 2026-01-22 | SYNTHESIS TERMINAL v2.58</p>
+    </footer>
+
 </body>
 </html>
