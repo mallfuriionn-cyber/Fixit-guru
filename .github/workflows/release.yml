@@ -1,16 +1,19 @@
-name: Full Auto Release
+name: Full Auto CI/CD (Release & Pages)
 
 on:
   push:
-    branches:
-      - main  # Spustí se automaticky při každém pushi do hlavní větve
+    branches: ["main"]
 
+# Nastavení oprávnění pro zápis verzí a publikování webu
 permissions:
-  contents: write  # Nutné pro automatické nahrávání balíčků
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
-  build-and-release:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout kódu
         uses: actions/checkout@v4
@@ -20,28 +23,39 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Vytvoření balíčku (ZIP)
-        # Zabalí projekt a pojmenuje ho podle čísla buildu
+      # 1. KROK: Kontrola kódu (nepovinné, ale doporučené)
+      - name: Kontrola formátování
+        run: deno fmt --check || true # '|| true' zajistí, že proces neskončí chybou, pokud není naformátováno
+
+      # 2. KROK: Vytvoření balíčku pro Release
+      - name: Vytvoření ZIP balíčku
         run: zip -r fixit-guru-build-${{ github.run_number }}.zip . -x "*.git*" ".github*"
 
-      - name: Automatické vytvoření Release
+      # 3. KROK: Automatický Release
+      - name: Publikovat Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: b${{ github.run_number }}
+          tag_name: v${{ github.run_number }}
           name: Auto-Build v${{ github.run_number }}
           body: |
             ### 🤖 Automatický release systému Fixit-guru
-            Tato verze byla vygenerována automaticky při pushi do větve main.
-            
-            **Podrobnosti:**
-            - Číslo sestavení: ${{ github.run_number }}
-            - Commit: ${{ github.sha }}
-            - Čas vygenerování: ${{ github.event.head_commit.timestamp }}
-            
-            Vytvořeno pro komunitu Studio Synthesis | 2026
-          draft: false
-          prerelease: false
-          files: |
-            fixit-guru-build-${{ github.run_number }}.zip
+            Tato verze byla vygenerována automaticky.
+            - **Sestavení:** č. ${{ github.run_number }}
+            - **Web:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+          files: fixit-guru-build-${{ github.run_number }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4. KROK: Příprava a publikace GitHub Pages (Webu)
+      - name: Nastavení Pages
+        uses: actions/configure-pages@v4
+
+      - name: Nahrání artefaktu pro web
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.' # Nahrává celý obsah projektu na web
+
+      - name: Nasazení na GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
