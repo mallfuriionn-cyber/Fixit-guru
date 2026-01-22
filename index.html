@@ -1,108 +1,142 @@
 
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="cs" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FixIt Guru v2.52 | Studio Synthesis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FixIt Guru v2.89 | Studio Synthesis Terminal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&display=swap');
         
+        :root {
+            --hud-accent: #2563eb;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fbfbfd;
-            color: #1d1d1f;
+            font-family: 'Inter', sans-serif;
+            background-color: #050506;
+            color: #ffffff;
             -webkit-font-smoothing: antialiased;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            overflow: hidden;
+            height: 100%;
         }
 
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-        }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+        .hud-glass {
+            background: rgba(10, 10, 12, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .apple-shadow { box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06); }
-
-        /* Icon Animations v2.52 */
-        @keyframes wrench-turn {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(30deg); }
-        }
-        .animate-wrench { animation: wrench-turn 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-
-        @keyframes leaf-sway {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(15deg) scale(1.1); }
-        }
-        .animate-leaf { animation: leaf-sway 4s ease-in-out infinite; }
-
-        @keyframes status-pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.2); }
-        }
-        .status-pulse { animation: status-pulse 2s infinite; }
-
-        /* Eko-ticker animation */
-        @keyframes ticker {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        .animate-ticker {
-            display: inline-block;
-            white-space: nowrap;
-            animation: ticker 40s linear infinite;
-        }
-
-        .hud-transparency { opacity: 0.98; }
-        
-        /* Specialized Glows */
-        .glow-blue { box-shadow: 0 0 60px rgba(37, 99, 235, 0.1); }
-        .glow-amber { box-shadow: 0 0 60px rgba(217, 119, 6, 0.1); }
-        .glow-emerald { box-shadow: 0 0 60px rgba(5, 150, 105, 0.1); }
-        .glow-orange { box-shadow: 0 0 60px rgba(234, 88, 12, 0.1); }
-
-        /* Terminal Scanline */
-        .scanline::before {
+        /* Scanline and Vignette for CRT feel */
+        .scanline::after {
             content: " ";
             display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.02) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.01));
-            z-index: 999;
-            background-size: 100% 4px, 3px 100%;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 100;
+            background-size: 100% 3px, 3px 100%;
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.25;
         }
 
-        /* Smooth scrolling for portal */
-        html { scroll-behavior: smooth; }
+        .vignette {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 20vw rgba(0,0,0,0.95);
+            pointer-events: none;
+            z-index: 50;
+        }
 
-        /* Specialized transitions */
-        .specialist-card {
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        /* DNA Background Animations */
+        @keyframes karel-dna {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
+        }
+        .dna-karel {
+            background-image: radial-gradient(circle, rgba(59,130,246,0.15) 1px, transparent 0);
+            background-size: 16px 16px;
+            animation: karel-dna 15s linear infinite;
+        }
+
+        @keyframes lucie-dna {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        .dna-lucie {
+            opacity: 0.12;
+            font-size: 7px;
+            line-height: 1.2;
+            animation: lucie-dna 40s linear infinite;
+            mask-image: linear-gradient(to bottom, transparent, black, transparent);
+        }
+
+        @keyframes dasa-dna {
+            0% { transform: scale(1) rotate(0deg); opacity: 0.15; }
+            50% { transform: scale(1.2) rotate(5deg); opacity: 0.25; }
+            100% { transform: scale(1) rotate(0deg); opacity: 0.15; }
+        }
+        .dna-dasa {
+            background: radial-gradient(circle at center, rgba(16,185,129,0.2) 0%, transparent 70%);
+            animation: dasa-dna 10s ease-in-out infinite;
+        }
+
+        @keyframes frantisek-dna {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+        .dna-frantisek {
+            background-image: repeating-linear-gradient(45deg, rgba(249,115,22,0.06) 0, rgba(249,115,22,0.06) 1px, transparent 0, transparent 40px);
+            animation: frantisek-dna 3s linear infinite;
+        }
+
+        /* Specialized card transitions - Pure Floating Mode */
+        .card-perspective {
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            transform-style: preserve-3d;
+        }
+        .card-perspective:not(.active) {
+            transform: scale(0.98);
+            opacity: 0.95;
+            background: transparent !important;
+            border-color: transparent !important;
+        }
+        .card-perspective.active {
+            transform: scale(1.15) translateY(-10px);
+            z-index: 40;
+            opacity: 1;
+            background: rgba(255,255,255,0.03) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5);
+        }
+
+        /* Aura Pulsing */
+        @keyframes aura-pulse {
+            0% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.2; }
+            50% { transform: translate(-50%, -50%) scale(1.05); opacity: 0.35; }
+            100% { transform: translate(-50%, -50%) scale(0.95); opacity: 0.2; }
+        }
+        .active-aura {
+            animation: aura-pulse 8s ease-in-out infinite;
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        
+        .floating-accent {
+            filter: drop-shadow(0 0 15px currentColor);
         }
     </style>
 <script type="importmap">
 {
   "imports": {
     "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
-    "lucide-react": "https://esm.sh/lucie-react@^0.562.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.469.0",
     "react/": "https://esm.sh/react@^19.2.3/",
     "react": "https://esm.sh/react@^19.2.3",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
@@ -111,6 +145,7 @@
 </script>
 </head>
 <body class="scanline">
-    <div id="root"></div>
+    <div class="vignette"></div>
+    <div id="root" class="h-full"></div>
 </body>
 </html>

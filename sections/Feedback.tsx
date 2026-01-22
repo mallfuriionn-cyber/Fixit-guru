@@ -1,40 +1,26 @@
 
-import React, { useState, useMemo } from 'react';
-import { 
-  Beaker, 
-  Ear, 
-  Eye, 
-  Navigation, 
-  Plus, 
-  ArrowLeft, 
-  BrainCircuit, 
-  Sparkles, 
-  Loader2, 
-  Target, 
-  Lightbulb, 
-  Send, 
-  X,
-  Wrench,
-  BookOpen,
-  Leaf,
-  Hammer,
-  Bug,
-  Zap,
-  Microscope,
-  ChevronRight,
-  ChevronDown,
-  User,
-  Clock,
-  CheckCircle2,
-  Calendar
-} from 'lucide-react';
+import React, { useState } from 'react';
+import { Beaker, BrainCircuit, Loader2, Zap, ChevronRight, User, History, ArrowRight } from 'lucide-react';
 import { CharacterType, InnovationProposal, UserPath, ProposalStatus, InnovationCategory, UserProfile } from '../types';
 import { askGuru } from '../geminiService';
 
-interface Props { 
-  lang: 'cs' | 'en'; 
-  currentUser?: UserProfile | null;
-}
+interface Props { lang: 'cs' | 'en'; currentUser?: UserProfile | null; }
+
+const Wrench = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a2 2 0 0 1-2.79 2.79L15 12.1l-5.1-5.1 3.77-3.77a2 2 0 0 1 2.79 2.79l-1.76 1.77Z"/><path d="M5 21v-4a2 2 0 0 1 2-2h4"/><path d="m3 7 2 2"/><path d="m9 3 2 2"/></svg>
+);
+
+const BookOpen = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+);
+
+const Leaf = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C10.9 14.51 12 15 13 17c1 2 1.1 2.22 1 3"/><path d="M14 13c0-3 2-6 6-7"/></svg>
+);
+
+const Hammer = ({ className }: { className?: string }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 12-8.5 8.5c-.83.83-2.17.83-3 0 0 0 0 0 0 0a2.12 2.12 0 0 1 0-3L12 9"/><path d="M17.64 15 22 10.64"/><path d="m20.91 11.7-1.25-1.25c-.6-.6-.93-1.4-.93-2.25v-.86c0-1.38.63-2.68 1.71-3.51a1.21 1.21 0 0 0-.01-1.92L19.26 1c-.39-.39-1.02-.39-1.41 0l-3.23 3.23a1.2 1.2 0 0 0 0 1.7c.83.83 2.13.83 2.96 0l.27-.27c.4-.4.92-.62 1.48-.62h.43c.4 0 .78.15 1.07.44l.85.85c.29.29.44.67.44 1.07v.22c0 .56-.22 1.09-.62 1.48l-1.25 1.25c-.29.29-.29.77 0 1.06l1.25 1.25c.29.29.77.29 1.06 0l1.25-1.25a.75.75 0 0 0 0-1.06z"/></svg>
+);
 
 const CHARACTER_CONFIG = {
   [CharacterType.KAREL]: { name: 'Karel', color: 'text-blue-600', icon: Wrench, bg: 'bg-blue-50' },
@@ -43,423 +29,119 @@ const CHARACTER_CONFIG = {
   [CharacterType.FRANTISEK]: { name: 'František', color: 'text-orange-600', icon: Hammer, bg: 'bg-orange-50' },
 };
 
-const CATEGORY_CONFIG = {
-  [InnovationCategory.FEATURE]: { label: 'Nová Funkce', icon: Zap, color: 'text-purple-600', bg: 'bg-purple-50' },
-  [InnovationCategory.BUG]: { label: 'Hlášení Chyby', icon: Bug, color: 'text-red-600', bg: 'bg-red-50' },
-  [InnovationCategory.OPTIMIZATION]: { label: 'Optimalizace', icon: Beaker, color: 'text-blue-600', bg: 'bg-blue-50' },
-  [InnovationCategory.RESEARCH]: { label: 'Výzkum & Vývoj', icon: Microscope, color: 'text-zinc-600', bg: 'bg-zinc-100' },
-};
-
-const INITIAL_PROPOSALS: InnovationProposal[] = [
-  { id: '1', title: 'Smell Detection v3.0', category: InnovationCategory.RESEARCH, specialist: CharacterType.KAREL, description: 'Senzorická analýza plynů při přehřívání PCB. Detekuje specifické chemické složení kouře z taveného PVC a elektrolytů.', author: 'Synthesis_Lab', authorTier: UserPath.PRO, votes: 156, status: ProposalStatus.DEVELOPMENT, timestamp: new Date('2025-10-01') },
-  { id: '2', title: 'AR Vision Glasses', category: InnovationCategory.FEATURE, specialist: CharacterType.LUCIE, description: 'HUD vrstva pro přímou identifikaci součástek. Umožňuje automatické zvýraznění pinů procesoru v reálném čase.', author: 'Optic_Dev', authorTier: UserPath.PRO, votes: 142, status: ProposalStatus.PENDING, timestamp: new Date('2025-11-15') },
-  { id: '3', title: 'Chyba v Step-Locku u retro vysavačů', category: InnovationCategory.BUG, specialist: CharacterType.LUCIE, description: 'Lucie přeskakuje krok čištění filtru u modelu ETA 400. To může vést k poškození motoru.', author: 'Vysavac_Guru', authorTier: UserPath.EXPERIENCED, votes: 89, status: ProposalStatus.PENDING, timestamp: new Date('2026-01-05') },
-  { id: '4', title: 'Optimalizace Dášiny analýzy PH', category: InnovationCategory.OPTIMIZATION, specialist: CharacterType.DASA, description: 'Zrychlení detekce barevného spektra u lakmusových papírků pomocí neuronové sítě.', author: 'Bio_Hacker', authorTier: UserPath.PRO, votes: 67, status: ProposalStatus.DEVELOPMENT, timestamp: new Date('2025-12-20') },
-  { id: '5', title: 'Databáze 3D modelů pro Františka', category: InnovationCategory.FEATURE, specialist: CharacterType.FRANTISEK, description: 'Knihovna pro tisk náhradních dílů k cirkulárkám a stavebním strojům.', author: 'Wood_Master', authorTier: UserPath.EXPERIENCED, votes: 45, status: ProposalStatus.PENDING, timestamp: new Date('2026-01-10') },
-  { id: '6', title: 'Podpora Bluetooth multimetrů', category: InnovationCategory.OPTIMIZATION, specialist: CharacterType.KAREL, description: 'Automatické načítání naměřených hodnot do HUDu bez nutnosti ručního zápisu.', author: 'Volt_Hunter', authorTier: UserPath.PRO, votes: 38, status: ProposalStatus.PENDING, timestamp: new Date('2026-01-12') },
-  { id: '7', title: 'Hlasové SOS pro nevidomé opraváře', category: InnovationCategory.RESEARCH, specialist: CharacterType.LUCIE, description: 'Hmatová a zvuková navigace v prostoru zařízení pro inkluzivní opravy.', author: 'Access_Dev', authorTier: UserPath.PRO, votes: 24, status: ProposalStatus.PENDING, timestamp: new Date('2026-01-14') }
-];
-
 export const FeedbackContent: React.FC<Props> = ({ lang, currentUser }) => {
   const isCs = lang === 'cs';
   const [view, setView] = useState<'list' | 'form'>('list');
-  const [selectedProposal, setSelectedProposal] = useState<InnovationProposal | null>(null);
-  const [showAll, setShowAll] = useState(false);
   const [isBrainstorming, setIsBrainstorming] = useState(false);
-  const [proposals, setProposals] = useState<InnovationProposal[]>(INITIAL_PROPOSALS);
-  
-  const [newProposal, setNewProposal] = useState({
-    title: '',
-    description: '',
-    category: InnovationCategory.FEATURE,
-    specialist: CharacterType.KAREL,
-    problem: '',
-    impact: ''
-  });
+  const [proposals, setProposals] = useState<InnovationProposal[]>([
+    { id: 'b1', title: 'Acoustic AI Diagnostics', category: InnovationCategory.RESEARCH, specialist: CharacterType.KAREL, description: 'Modul pro frekvenční analýzu zvuku motorů a ložisek pomocí mikrofonu smartphonu pro včasnou detekci mechanického opotřebení.', author: 'Synthesis_Lab', authorTier: UserPath.PRO, votes: 215, status: ProposalStatus.DEVELOPMENT, timestamp: new Date() },
+    { id: 'b2', title: 'AR Pinpoint Overlay', category: InnovationCategory.FEATURE, specialist: CharacterType.LUCIE, description: 'Vizuální vrstva rozšířené reality, která v reálném čase označuje měřící body na desce plošných spojů podle načteného schématu.', author: 'Optic_Dev', authorTier: UserPath.PRO, votes: 184, status: ProposalStatus.PENDING, timestamp: new Date() },
+    { id: 'b3', title: 'Bio-Digital Soil Sensors', category: InnovationCategory.RESEARCH, specialist: CharacterType.DASA, description: 'Integrace levných ESP32 senzorů pro kontinuální monitoring PH a vlhkosti půdy s přímým napojením na Dášin diagnostický algoritmus.', author: 'Eco_Maker', authorTier: UserPath.PRO, votes: 142, status: ProposalStatus.PENDING, timestamp: new Date() },
+    { id: 'b4', title: 'Stress-Load Calculator', category: InnovationCategory.OPTIMIZATION, specialist: CharacterType.FRANTISEK, description: 'Dynamický výpočet nosnosti dřevěných konstrukcí při rekonstrukcích krovů na základě vizuální analýzy stavu trámů.', author: 'HardWork_Pavel', authorTier: UserPath.EXPERIENCED, votes: 98, status: ProposalStatus.PENDING, timestamp: new Date() },
+  ]);
 
-  const sortedProposals = useMemo(() => {
-    return [...proposals].sort((a, b) => b.votes - a.votes);
-  }, [proposals]);
-
-  const displayedProposals = showAll ? sortedProposals : sortedProposals.slice(0, 5);
-
-  const handleVote = (id: string, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    setProposals(prev => prev.map(p => {
-      if (p.id === id) {
-        return { ...p, votes: p.userVoted ? p.votes - 1 : p.votes + 1, userVoted: !p.userVoted };
-      }
-      return p;
-    }));
-  };
+  const [newProp, setNewProp] = useState({ title: '', description: '', category: InnovationCategory.FEATURE, specialist: CharacterType.KAREL });
 
   const handleBrainstorm = async () => {
-    if (!newProposal.title && !newProposal.description) {
-      alert(isCs ? "Zadejte aspoň téma nebo náznak nápadu do názvu." : "Enter at least a topic or a hint of an idea in the title.");
-      return;
-    }
-    
     setIsBrainstorming(true);
+    const prompt = `Jsi inovační asistent Studio Synthesis. Rozpracuj tento nápad technicky pro komunitní backlog: "${newProp.title}"`;
     try {
-      const prompt = `Jsi inovační asistent Studia Synthesis. Uživatel chce navrhnout vylepšení pro specialisty (Karel, Lucie, Dáša, František).
-      Nápad/Téma: "${newProposal.title}"
-      Základní popis: "${newProposal.description}"
-      Typ podnětu: ${newProposal.category}
-      
-      Tvým úkolem je nápad technicky rozpracovat. Vrať výsledek v tomto formátu (v češtině):
-      NÁZEV: [vystižný profi název]
-      POPIS: [detailní technický popis fungování nebo hlášení chyby]
-      PROBLÉM: [jaký konkrétní problém to v dílně/zahradě řeší]
-      DOPAD: [odhadovaný přínos pro uživatele nebo stabilitu systému]`;
-
-      const response = await askGuru(CharacterType.LUCIE, prompt, [], undefined, undefined, 'gemini-3-flash-preview');
-      
-      const lines = response.split('\n');
-      const getVal = (key: string) => {
-        const line = lines.find(l => l.toUpperCase().includes(key));
-        return line ? line.split(':')[1]?.trim() : "";
-      };
-
-      setNewProposal(prev => ({
-        ...prev,
-        title: getVal('NÁZEV') || prev.title,
-        description: getVal('POPIS') || response.replace(/NÁZEV:.*|PROBLÉM:.*|DOPAD:.*/gi, '').trim(),
-        problem: getVal('PROBLÉM'),
-        impact: getVal('DOPAD')
-      }));
-    } catch (e) {
+      const res = await askGuru(CharacterType.LUCIE, prompt, [], undefined, undefined, 'gemini-3-flash-preview');
+      setNewProp(prev => ({ ...prev, description: res }));
+    } catch(e) {
       console.error(e);
     } finally {
       setIsBrainstorming(false);
     }
   };
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    const proposal: InnovationProposal = {
-      id: Math.random().toString(36).substr(2, 9),
-      title: newProposal.title,
-      category: newProposal.category,
-      specialist: newProposal.specialist,
-      description: newProposal.description,
-      // Metadata added to description text if not explicitly in object
-      author: currentUser?.name || 'Operator',
-      authorTier: currentUser?.path || UserPath.PRO,
-      votes: 1,
-      status: ProposalStatus.PENDING,
-      timestamp: new Date(),
-      userVoted: true
-    };
-    // Special hack to store problem/impact inside the object if needed, 
-    // or we can just append it to description as we did before.
-    // For the detail view, we'll assume they are stored as [PROBLÉM]: tags if appended.
-    if (newProposal.problem || newProposal.impact) {
-        proposal.description += `\n\n[PROBLÉM]: ${newProposal.problem}\n[DOPAD]: ${newProposal.impact}`;
-    }
-
-    setProposals([proposal, ...proposals]);
-    alert(isCs ? "Uloženo do backlogu." : "Saved to backlog.");
-    setView('list');
-    setNewProposal({ title: '', description: '', category: InnovationCategory.FEATURE, specialist: CharacterType.KAREL, problem: '', impact: '' });
-  };
-
-  const getStatusInfo = (status: ProposalStatus) => {
-    switch (status) {
-      case ProposalStatus.PENDING: return { label: isCs ? 'Čeká' : 'Pending', color: 'text-zinc-400', icon: Clock };
-      case ProposalStatus.DEVELOPMENT: return { label: isCs ? 'Vývoj' : 'Dev', color: 'text-blue-500', icon: Hammer };
-      case ProposalStatus.DEPLOYED: return { label: isCs ? 'Live' : 'Live', color: 'text-emerald-500', icon: CheckCircle2 };
-    }
-  };
-
-  // UI for Detailed Proposal Window
-  const DetailView = ({ proposal, onClose }: { proposal: InnovationProposal, onClose: () => void }) => {
-    const cat = CATEGORY_CONFIG[proposal.category];
-    const spec = CHARACTER_CONFIG[proposal.specialist];
-    const status = getStatusInfo(proposal.status);
-    
-    // Parse problem and impact if they are in the description
-    const problemMatch = proposal.description.match(/\[PROBLÉM\]:\s*(.*)/i);
-    const impactMatch = proposal.description.match(/\[DOPAD\]:\s*(.*)/i);
-    const cleanDesc = proposal.description.replace(/\[PROBLÉM\]:.*|\[DOPAD\]:.*/gi, '').trim();
-
-    return (
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 animate-in fade-in duration-300">
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={onClose} />
-        <div className="bg-white w-full max-w-lg rounded-[3.5rem] p-8 border border-black/5 shadow-2xl relative z-10 custom-scroll overflow-y-auto max-h-[90vh] space-y-8">
-          <header className="flex justify-between items-start">
-            <div className="space-y-2">
-               <div className="flex items-center gap-2">
-                  <div className={`px-2 py-1 rounded-lg ${cat.bg} ${cat.color} flex items-center gap-1.5`}>
-                    <cat.icon className="w-4 h-4" />
-                    <span className="text-[9px] font-black uppercase tracking-widest">{cat.label}</span>
-                  </div>
-                  <div className={`px-2 py-1 rounded-lg ${spec.bg} ${spec.color} flex items-center gap-1.5`}>
-                    <spec.icon className="w-4 h-4" />
-                    <span className="text-[9px] font-black uppercase tracking-widest">{spec.name}</span>
-                  </div>
-               </div>
-               <h3 className="text-2xl font-black uppercase tracking-tight leading-none text-zinc-900">{proposal.title}</h3>
-               <div className="flex items-center gap-4 text-[10px] text-zinc-400 font-bold uppercase tracking-widest">
-                  <span className="flex items-center gap-1.5"><Calendar className="w-3 h-3" /> {new Date(proposal.timestamp).toLocaleDateString()}</span>
-                  <span className="flex items-center gap-1.5"><status.icon className={`w-3 h-3 ${status.color}`} /> {status.label}</span>
-               </div>
-            </div>
-            <button onClick={onClose} className="p-3 bg-zinc-50 rounded-full hover:bg-zinc-100 transition-colors"><X className="w-6 h-6" /></button>
-          </header>
-
-          <div className="space-y-6">
-            <section className="space-y-3">
-               <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Technický popis</h4>
-               <p className="text-sm font-medium leading-relaxed text-zinc-600 whitespace-pre-line bg-zinc-50 p-6 rounded-[2rem] border border-black/[0.03]">
-                 {cleanDesc}
-               </p>
-            </section>
-
-            <div className="grid grid-cols-1 gap-4">
-               {problemMatch && (
-                 <div className="p-6 rounded-[2.5rem] bg-purple-50 border border-purple-100 flex gap-5 items-start">
-                    <Target className="w-6 h-6 text-purple-600 shrink-0 mt-1" />
-                    <div>
-                      <h5 className="text-[10px] font-black uppercase text-purple-900 mb-1">Řešený Problém</h5>
-                      <p className="text-[11px] font-bold text-purple-800/70 uppercase leading-snug">{problemMatch[1]}</p>
-                    </div>
-                 </div>
-               )}
-               {impactMatch && (
-                 <div className="p-6 rounded-[2.5rem] bg-emerald-50 border border-emerald-100 flex gap-5 items-start">
-                    <Lightbulb className="w-6 h-6 text-emerald-600 shrink-0 mt-1" />
-                    <div>
-                      <h5 className="text-[10px] font-black uppercase text-emerald-900 mb-1">Očekávaný Dopad</h5>
-                      <p className="text-[11px] font-bold text-emerald-800/70 uppercase leading-snug">{impactMatch[1]}</p>
-                    </div>
-                 </div>
-               )}
-            </div>
-          </div>
-
-          <footer className="pt-6 border-t border-black/[0.05] flex items-center justify-between">
-             <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-zinc-100 rounded-2xl"><User className="w-5 h-5 text-zinc-400" /></div>
-                <div>
-                  <span className="text-[10px] font-black uppercase text-zinc-900 block leading-none">{proposal.author}</span>
-                  <span className="text-[8px] text-zinc-400 font-black uppercase tracking-widest mt-1">Synthesis Operator [{proposal.authorTier}]</span>
-                </div>
-             </div>
-             <div className="flex items-center gap-3">
-                <span className="text-xl font-black">{proposal.votes}</span>
-                <button 
-                  onClick={() => handleVote(proposal.id)}
-                  className={`p-4 rounded-2xl transition-all active:scale-90 ${proposal.userVoted ? 'bg-purple-600 text-white' : 'bg-zinc-100 text-zinc-400'}`}
-                >
-                  <Zap className={`w-5 h-5 ${proposal.userVoted ? 'fill-current' : ''}`} />
-                </button>
-             </div>
-          </footer>
-        </div>
-      </div>
-    );
-  };
-
   if (view === 'form') {
     return (
-      <div className="space-y-6 max-w-md mx-auto py-2 animate-in fade-in slide-in-from-right-4 duration-500">
-        <button 
-          onClick={() => setView('list')}
-          className="flex items-center gap-2 text-[10px] font-black uppercase text-zinc-400 hover:text-black transition-colors mb-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          {isCs ? 'Zpět na přehled' : 'Back to Overview'}
-        </button>
-
-        <header className="border-l-4 border-purple-500 pl-4 py-1">
-          <h2 className="text-xl font-black uppercase tracking-tight">
-            {isCs ? 'Přidat technický podnět' : 'Add Technical Input'}
-          </h2>
-          <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest opacity-60">Synthesis R&D Protocol v2.1</p>
+      <div className="space-y-10 animate-in fade-in slide-in-from-right-4 duration-700 pb-16">
+        <header className="flex flex-col gap-4 border-l-4 border-purple-500 pl-6 py-2">
+          <span className="text-[10px] font-black uppercase tracking-[0.5em] text-purple-600/50">COMMUNITY-ENGINE</span>
+          <h2 className="text-3xl font-black uppercase tracking-tighter leading-none">{isCs ? 'Navrhnout inovaci' : 'Propose Innovation'}</h2>
         </header>
 
-        <form onSubmit={handleSave} className="space-y-4">
+        <div className="space-y-6 bg-white p-10 rounded-[4rem] border border-black/5 shadow-xl">
           <div className="space-y-3">
-            <div className="space-y-1">
-              <label className="text-[8px] font-black uppercase text-zinc-400 ml-2 tracking-widest">{isCs ? 'Typ podnětu' : 'Input Category'}</label>
-              <div className="grid grid-cols-2 gap-1.5">
-                {Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setNewProposal({...newProposal, category: key as InnovationCategory})}
-                    className={`flex items-center gap-2.5 p-3 rounded-2xl border transition-all ${newProposal.category === key ? 'bg-white border-purple-500 shadow-sm' : 'bg-zinc-50 border-transparent opacity-60'}`}
-                  >
-                    <cfg.icon className={`w-3.5 h-3.5 ${cfg.color}`} />
-                    <span className="text-[8px] font-black uppercase tracking-tight">{cfg.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[8px] font-black uppercase text-zinc-400 ml-2 tracking-widest">{isCs ? 'Název podnětu' : 'Input Title'}</label>
-              <input 
-                required
-                placeholder={isCs ? "např. Detekce zkratu AR..." : "e.g. AR Short Circuit..."} 
-                className="w-full bg-zinc-50 border border-black/5 rounded-xl px-4 py-3 text-xs font-bold outline-none focus:border-purple-500 transition-all"
-                value={newProposal.title}
-                onChange={e => setNewProposal({...newProposal, title: e.target.value})}
-              />
-            </div>
-
-            <div className="flex gap-1">
-              {Object.entries(CHARACTER_CONFIG).map(([type, config]) => (
-                <button 
-                  key={type}
-                  type="button"
-                  onClick={() => setNewProposal({...newProposal, specialist: type as CharacterType})}
-                  className={`flex-1 p-2 rounded-xl border transition-all flex flex-col items-center gap-1 ${newProposal.specialist === type ? 'bg-white border-purple-500 shadow-sm' : 'bg-transparent border-transparent opacity-40'}`}
-                >
-                  <config.icon className={`w-4 h-4 ${config.color}`} />
-                  <span className="text-[7px] font-black uppercase">{config.name}</span>
-                </button>
-              ))}
-            </div>
-
-            <button 
-              type="button"
-              onClick={handleBrainstorm}
-              disabled={isBrainstorming}
-              className={`w-full py-3 rounded-xl border-2 flex items-center justify-center gap-2 transition-all group ${isBrainstorming ? 'bg-zinc-100 border-zinc-200 text-zinc-400' : 'bg-white border-purple-200 text-purple-600 hover:bg-purple-50 active:scale-95'}`}
-            >
-              {isBrainstorming ? <Loader2 className="w-4 h-4 animate-spin" /> : <BrainCircuit className="w-4 h-4" />}
-              <span className="text-[9px] font-black uppercase tracking-widest">
-                {isBrainstorming ? (isCs ? 'Generuji detaily...' : 'Generating...') : (isCs ? 'Brainstorming s AI' : 'Brainstorm with AI')}
-              </span>
-              {!isBrainstorming && <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />}
-            </button>
-
-            <div className="space-y-1">
-              <label className="text-[8px] font-black uppercase text-zinc-400 ml-2 tracking-widest">{isCs ? 'Detailní popis' : 'Detailed Description'}</label>
-              <textarea 
-                placeholder={isCs ? "Popište podrobně vaši vizi nebo problém..." : "Describe your vision or problem in detail..."}
-                className="w-full h-24 bg-zinc-50 border border-black/5 rounded-xl px-4 py-3 text-xs font-medium outline-none focus:border-purple-500 resize-none transition-all"
-                value={newProposal.description}
-                onChange={e => setNewProposal({...newProposal, description: e.target.value})}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-2">
-              <div className="relative">
-                <Target className="absolute left-3 top-3 w-3 h-3 text-zinc-300" />
-                <input 
-                  placeholder={isCs ? "Jaký problém to řeší?" : "What problem does it solve?"}
-                  className="w-full bg-zinc-50 border border-black/5 rounded-xl pl-9 pr-4 py-3 text-[10px] font-bold outline-none focus:border-purple-500"
-                  value={newProposal.problem}
-                  onChange={e => setNewProposal({...newProposal, problem: e.target.value})}
-                />
-              </div>
-              <div className="relative">
-                <Lightbulb className="absolute left-3 top-3 w-3 h-3 text-zinc-300" />
-                <input 
-                  placeholder={isCs ? "Jaký to bude mít dopad?" : "What will be the impact?"}
-                  className="w-full bg-zinc-50 border border-black/5 rounded-xl pl-9 pr-4 py-3 text-[10px] font-bold outline-none focus:border-purple-500"
-                  value={newProposal.impact}
-                  onChange={e => setNewProposal({...newProposal, impact: e.target.value})}
-                />
-              </div>
-            </div>
+             <label className="text-[10px] font-black uppercase text-zinc-300 ml-6 tracking-widest">Téma podnětu</label>
+             <input className="w-full bg-zinc-50 border border-black/5 rounded-[2.2rem] px-8 py-6 text-sm font-bold outline-none focus:border-purple-600 focus:bg-white transition-all shadow-inner" placeholder="Pojmenujte svůj impuls..." value={newProp.title} onChange={e => setNewProp({...newProp, title: e.target.value})} />
           </div>
 
-          <button type="submit" className="w-full py-4 rounded-xl bg-purple-600 text-white text-[11px] font-black uppercase tracking-[0.2em] flex items-center justify-center gap-2 shadow-xl hover:bg-purple-700 transition-colors">
-            <Send className="w-4 h-4" /> {isCs ? 'Uložit do registru Synthesis' : 'Save to Synthesis Registry'}
+          <button onClick={handleBrainstorm} disabled={isBrainstorming} className="w-full py-6 bg-zinc-950 text-white rounded-[2rem] text-[11px] font-black uppercase flex items-center justify-center gap-3 hover:bg-black transition-all shadow-lg group">
+            {isBrainstorming ? <Loader2 className="animate-spin w-5 h-5" /> : <BrainCircuit className="w-5 h-5 text-purple-400 group-hover:rotate-12 transition-transform" />} 
+            {isCs ? 'AI BRAINSTORMING PROTOCOL' : 'AI BRAINSTORMING PROTOCOL'}
           </button>
-        </form>
+
+          <div className="space-y-3">
+             <label className="text-[10px] font-black uppercase text-zinc-300 ml-6 tracking-widest">Technický detail</label>
+             <textarea className="w-full h-48 bg-zinc-50 border border-black/5 rounded-[2.5rem] px-8 py-8 text-sm font-medium outline-none focus:border-purple-600 focus:bg-white transition-all shadow-inner custom-scroll" placeholder="Popište technickou podstatu vize..." value={newProp.description} onChange={e => setNewProp({...newProp, description: e.target.value})} />
+          </div>
+
+          <div className="pt-4 flex gap-4">
+             <button className="flex-1 py-6 bg-purple-600 text-white rounded-[2rem] text-[11px] font-black uppercase shadow-xl shadow-purple-900/10 hover:bg-purple-700 transition-all" onClick={() => setView('list')}>
+                {isCs ? 'ULOŽIT DO REGISTRU' : 'SAVE TO REGISTRY'}
+             </button>
+             <button className="px-10 py-6 bg-zinc-100 text-zinc-400 rounded-[2rem] text-[11px] font-black uppercase hover:bg-zinc-200 transition-all" onClick={() => setView('list')}>
+                {isCs ? 'ZRUŠIT' : 'CANCEL'}
+             </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-8 max-w-xl mx-auto py-1 animate-in fade-in duration-500">
-      {selectedProposal && <DetailView proposal={selectedProposal} onClose={() => setSelectedProposal(null)} />}
-      
-      <div className="flex justify-between items-end">
-        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-900/60">
-          {isCs ? 'Innovation Backlog (Dle reakcí)' : 'Innovation Backlog (By Reactions)'}
-        </h4>
-        <button 
-          onClick={() => setView('form')}
-          className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
-        >
-          <Plus className="w-3 h-3" />
-          {isCs ? 'Navrhnout inovaci' : 'New Innovation'}
-        </button>
+    <div className="space-y-12 animate-in fade-in duration-500">
+      <div className="flex justify-between items-center">
+         <div className="flex items-center gap-6">
+            <div className="p-4 bg-purple-100 text-purple-600 rounded-[1.5rem]"><Zap className="w-8 h-8" /></div>
+            <div className="flex flex-col">
+               <h4 className="text-3xl font-black uppercase tracking-tight leading-none">{isCs ? 'KOMUNITNÍ BACKLOG' : 'COMMUNITY BACKLOG'}</h4>
+               <span className="text-[10px] font-black text-zinc-300 uppercase tracking-widest mt-2">Synthesis Evolution Engine</span>
+            </div>
+         </div>
+         <button onClick={() => setView('form')} className="px-10 py-5 bg-purple-600 text-white rounded-full text-[11px] font-black uppercase shadow-xl hover:scale-105 transition-all">
+            {isCs ? 'NAVŔHNOUT' : 'PROPOSE'}
+         </button>
       </div>
 
-      <div className="space-y-2">
-        {displayedProposals.map((p) => {
-          const cat = CATEGORY_CONFIG[p.category];
-          const spec = CHARACTER_CONFIG[p.specialist];
+      <div className="grid grid-cols-1 gap-6">
+        {proposals.map(p => {
+          const spec = (CHARACTER_CONFIG as any)[p.specialist];
           return (
-            <div 
-              key={p.id} 
-              onClick={() => setSelectedProposal(p)}
-              className="p-5 rounded-[2.5rem] bg-white border border-black/5 shadow-sm hover:border-purple-100 hover:shadow-xl transition-all flex gap-5 items-center group cursor-pointer"
-            >
-              <div className="flex flex-col items-center gap-1 shrink-0">
-                <button 
-                  onClick={(e) => handleVote(p.id, e)}
-                  className={`p-3 rounded-xl transition-all active:scale-90 ${p.userVoted ? 'bg-purple-600 text-white shadow-md' : 'bg-zinc-100 text-zinc-400 hover:text-purple-600'}`}
-                >
-                  <Zap className={`w-4 h-4 ${p.userVoted ? 'fill-current' : ''}`} />
-                </button>
-                <span className="text-[11px] font-black">{p.votes}</span>
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                  <div className={`px-2 py-0.5 rounded-md ${cat.bg} ${cat.color} flex items-center gap-1`}>
-                    <cat.icon className="w-3 h-3" />
-                    <span className="text-[7.5px] font-black uppercase tracking-widest">{cat.label}</span>
+            <div key={p.id} className="p-8 rounded-[4rem] bg-white border border-black/5 flex items-center gap-10 group hover:shadow-[0_40px_80px_rgba(0,0,0,0.06)] hover:scale-[1.01] transition-all cursor-help relative overflow-hidden">
+               <div className={`p-6 rounded-[2rem] ${spec.bg} ${spec.color} group-hover:rotate-12 transition-transform shadow-sm`}>
+                  {React.createElement(spec.icon, { className: "w-8 h-8" })}
+               </div>
+               <div className="flex-1">
+                  <h5 className="text-[17px] font-black uppercase text-zinc-900 group-hover:text-purple-600 transition-colors tracking-tight leading-none">{p.title}</h5>
+                  <div className="flex items-center gap-4 mt-3">
+                     <span className="text-[10px] font-black uppercase text-zinc-300 tracking-widest">By {p.author}</span>
+                     <div className="w-1 h-1 rounded-full bg-zinc-200" />
+                     <span className="text-[10px] font-black uppercase text-zinc-400 tracking-widest">{p.status}</span>
                   </div>
-                  <div className={`px-2 py-0.5 rounded-md ${spec.bg} ${spec.color} flex items-center gap-1`}>
-                    <spec.icon className="w-3 h-3" />
-                    <span className="text-[7.5px] font-black uppercase tracking-widest">{spec.name}</span>
-                  </div>
-                  <span className="text-[7px] text-zinc-300 font-bold ml-auto">{new Date(p.timestamp).toLocaleDateString()}</span>
-                </div>
-                <h5 className="text-[12px] font-black uppercase text-zinc-900 leading-none mb-2 group-hover:text-purple-600 transition-colors tracking-tight">
-                  {p.title}
-                </h5>
-                <p className="text-[10px] text-zinc-400 uppercase leading-tight line-clamp-2 font-medium">
-                  {p.description.replace(/\[PROBLÉM\]:.*|\[DOPAD\]:.*/gi, '').trim()}
-                </p>
-              </div>
-              <ChevronRight className="w-5 h-5 text-zinc-200 group-hover:text-purple-500 transition-colors" />
+               </div>
+               <div className="flex items-center gap-4 px-8 py-4 bg-zinc-50 rounded-full border border-black/[0.02]">
+                  <Zap className="w-5 h-5 text-amber-500 fill-amber-500" />
+                  <span className="text-lg font-black tracking-tighter">{p.votes}</span>
+               </div>
+               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/[0.02] blur-[40px] pointer-events-none group-hover:bg-purple-500/[0.05] transition-all" />
             </div>
           );
         })}
       </div>
-
-      {!showAll && sortedProposals.length > 5 && (
-        <button 
-          onClick={() => setShowAll(true)}
-          className="w-full py-4 rounded-2xl bg-zinc-50 border border-black/5 text-zinc-400 hover:text-black hover:border-black/10 transition-all flex items-center justify-center gap-2 group"
-        >
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">{isCs ? 'Zobrazit dalších' : 'Show more'} ({sortedProposals.length - 5})</span>
-          <ChevronDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-        </button>
-      )}
-
-      {showAll && (
-        <button 
-          onClick={() => setShowAll(false)}
-          className="w-full py-4 rounded-2xl bg-zinc-50 border border-black/5 text-zinc-400 hover:text-black transition-all flex items-center justify-center gap-2"
-        >
-          <span className="text-[10px] font-black uppercase tracking-[0.3em]">{isCs ? 'Zobrazit méně' : 'Show less'}</span>
-        </button>
-      )}
-
-      <div className="pt-4 text-center">
-        <p className="text-[7px] text-zinc-300 font-black uppercase tracking-[0.5em]">
-          Studio Synthesis • Community Feedback Unit • 2026
-        </p>
+      
+      <div className="p-10 rounded-[4rem] bg-zinc-50 border border-black/5 flex items-center justify-between group">
+         <div className="flex items-center gap-8">
+            <History className="w-12 h-12 text-zinc-300 group-hover:rotate-180 transition-transform duration-1000" />
+            <div className="flex flex-col">
+               <span className="text-[13px] font-black uppercase text-zinc-900">Archivované milníky</span>
+               <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest mt-1">Sledujte evoluci systému od verze 1.0</p>
+            </div>
+         </div>
+         <ArrowRight className="w-8 h-8 text-zinc-200 group-hover:translate-x-3 transition-transform" />
       </div>
     </div>
   );
