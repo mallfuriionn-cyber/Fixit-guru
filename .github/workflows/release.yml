@@ -1,4 +1,4 @@
-name: Full Auto CI/CD (Guru Core & Synthesis Web)
+name: Full Auto CI/CD (Clean & Deploy)
 
 on:
   push:
@@ -22,34 +22,47 @@ jobs:
         with:
           deno-version: v1.x
 
-      # 1. KROK: Vytvoření ZIP balíčku (kompletní Guru kód pro Releases)
-      - name: Vytvoření ZIP balíčku
-        run: zip -r fixit-guru-build-${{ github.run_number }}.zip . -x "*.git*" ".github*"
-
-      # 2. KROK: Publikace Release na GitHubu
-      - name: Publikovat Release
-        uses: softprops/action-gh-release@v1
+      # 1. KROK: Smazání starého automatického release (aby byl v seznamu vždy jen jeden)
+      - name: Smazání starého Auto-Buildu
+        uses: dev-drprasad/delete-tag-and-release@v1.1
         with:
-          tag_name: v${{ github.run_number }}
-          name: Auto-Build v${{ github.run_number }}
-          body: |
-            ### 🤖 Automatický release systému Fixit-guru
-            Tato verze obsahuje kompletní jádro projektu.
-            - **Sestavení:** č. ${{ github.run_number }}
-            - **Web:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
-          files: fixit-guru-build-${{ github.run_number }}.zip
+          delete_release: true
+          tag_name: latest-autobuild # Tento tag budeme recyklovat
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 3. KROK: Nasazení webu ze složky 'www'
+      # 2. KROK: Vytvoření ZIP balíčku
+      - name: Vytvoření ZIP balíčku
+        run: zip -r fixit-guru-latest.zip . -x "*.git*" ".github*"
+
+      # 3. KROK: Vytvoření nového čerstvého Release
+      - name: Publikovat čerstvý Auto-Build
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest-autobuild
+          name: 🚀 FIXIT-GURU | Aktuální Sestavení
+          body: |
+            ### 🤖 Automaticky udržované sestavení
+            Tento release je automaticky aktualizován při každém pushi do main.
+            Vždy zde najdete nejnovější verzi jádra **Fixit-guru**.
+            
+            - **Poslední aktualizace:** ${{ github.event.head_commit.timestamp }}
+            - **Commit:** ${{ github.sha }}
+            - **Web dema:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+          files: fixit-guru-latest.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4. KROK: Nasazení webu z /www
       - name: Nastavení Pages
         uses: actions/configure-pages@v4
 
       - name: Nahrání artefaktu pro web
         uses: actions/upload-pages-artifact@v3
         with:
-          # Robot teď bere obsah pouze ze složky 'www'
-          path: './www' 
+          path: './www'
 
       - name: Nasazení na GitHub Pages
         id: deployment
